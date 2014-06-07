@@ -6,9 +6,9 @@
 
 #This determines the size of the pool based on the shape and dimensions
 @pi = 3.14
-@height_of_pool=4.5
-@constant_cubic_feet_to_gallons=7.48
-@target_pH=7.6
+@height_of_pool=4.5 #units is feet
+@constant_cubic_feet_to_gallons=7.48 #conversion constant for cubic feet to gallons
+@target_pH=7.6 #This is the target pH based on human skin pH
 
 def how_many_gallons shape
 	go_on = true
@@ -16,9 +16,9 @@ def how_many_gallons shape
 	while(go_on)
 		if shape == "round"
 			while(go_on_2)
-				puts "what diamter? (ex: 18 for an 18' round pool)"
+				puts "What is the diameter? (ex: 18 for an 18' round pool)"
 				diameter=gets.chomp.to_i
-				if diameter > 0
+				if diameter > 0 #letters convert to 0 when using .to_i
 					volume_round = 1.0/4.0*@pi*(diameter**2.0)*@height_of_pool 
 					volume_in_gallons = volume_round*@constant_cubic_feet_to_gallons
 					go_on_2 = false
@@ -29,25 +29,35 @@ def how_many_gallons shape
 
 
 		elsif shape == "oval"
-			puts "what is the width? (ex: 12 for a 12'x24' pool)"
-			width = gets.chomp 
-			puts "what is the length? (ex: 24 for a 12'x24' pool)"
-			length = gets.chomp 
-			volume_oval=@pi*width*length*@height_of_pool
-			volume_in_gallons=volume_oval*@constant_cubic_feet_to_gallons
+			while(go_on_2)
+				puts "What is the width? (ex: 12 for a 12'x24' pool)"
+				width = gets.chomp.to_i	
+				puts "What is the length? (ex: 24 for a 12'x24' pool)"
+				length = gets.chomp.to_i
+				if width > 0 && length > 0 #letters convert to 0 when using .to_i
+					volume_oval=@pi*width*length*@height_of_pool
+					volume_in_gallons=volume_oval*@constant_cubic_feet_to_gallons
+					go_on_2 = false
+				end
+			end 
 			go_on = false
 
 		elsif shape == "inground rectangle" 
-			puts "what is the inground width? (ex: 18 for an 18'x33' inground pool)"
-			inground_width = gets.chomp
-			puts "what is the inground length? (ex: 33 for an 18'x33' inground pool)"
-			inground_length = gets.chomp 
-			volume_inground = inground_length*inground_width*@height_of_pool
-			volume_in_gallons=volume_inground*@constant_cubic_feet_to_gallons
-			go_on = false
+			while(go_on_2)
+			puts "What is the inground width? (ex: 18 for an 18'x33' inground pool)"
+			inground_width = gets.chomp.to_i
+			puts "What is the inground length? (ex: 33 for an 18'x33' inground pool)"
+			inground_length = gets.chomp.to_i 
+			if inground_width > 0 && inground_length > 0 #letters convert to 0 when using .to_i
+					volume_inground = inground_length*inground_width*@height_of_pool
+					volume_in_gallons=volume_inground*@constant_cubic_feet_to_gallons
+					go_on_2 = false
+				end
+			end 
+			go_on=false
 
 		else 
-			puts "please write round, oval, inground rectangle"
+			puts "Please write 'round', 'oval', 'inground rectangle'"
 			shape = gets.chomp.downcase 
 		end
 
@@ -66,13 +76,13 @@ def should_you_shock_the_pool shock
 	go_on = true
 	while(go_on)
 		if shock=="yes"
-			puts "Do not add any more pool shock at this time!"
+			puts "Do not add any more shock at this time!"
 			go_on = false
 		elsif shock=="no"
 			amount_of_shock_to_add = @volume_in_gallons*(1.0/10000.0)
 			#the following code rounds the amount of shock to the nearest half-bag
 			amount_of_shock_to_add_rounded = ((amount_of_shock_to_add*2.0).round)/2.0
-			puts "Add #{amount_of_shock_to_add_rounded} bags of GreenOut to your pool"
+			puts "Add #{amount_of_shock_to_add_rounded} bags of GreenOut to your pool!"
 			go_on = false
 		else 
 			puts "Please answer yes or no!"
@@ -92,14 +102,14 @@ def how_much_pH_chemical_should_be_added pH, volume_in_gallons
 		if pH < @target_pH
 			amount_of_pH_to_add = volume_in_gallons*(2/(10000*0.1)*(@target_pH - pH))
 			amount_of_pH_to_add_rounded = ((2*amount_of_pH_to_add).round)/2
-			puts "Please add #{amount_of_pH_to_add_rounded} ounces of pH UP to your pool"
+			puts "Please add #{amount_of_pH_to_add_rounded} ounces of pH UP to your pool!"
 			go_on = false
 		elsif pH==@target_pH
 			puts "pH is perfect! No need to adjust!"
 			go_on = false
 		else 
-			volume_in_gallons*(2/(10000*0.1)*(pH - @target_pH))
-			amount_of_pH_to_add_rounded = ((2*amount_of_shock_to_add).round)/2
+			amount_of_pH_to_add = volume_in_gallons*(2/(10000*0.1)*(pH - @target_pH))
+			amount_of_pH_to_add_rounded = ((2*amount_of_pH_to_add).round)/2
 			puts "Please add #{amount_of_pH_to_add_rounded} ounces of pH DOWN to your pool"
 
 		end	
@@ -121,15 +131,10 @@ puts "What is your pH value out of 14?"
 pH=gets.chomp.to_f #converts from string to float 
 amount_of_pH_to_add_rounded = how_much_pH_chemical_should_be_added(pH, @volume_in_gallons)
 
+puts "Make sure you wait at least 8 hours before swimming after adding chemicals to your pool!"
+puts "Also, to maintain your chlorine reading throughout the week, make sure to add #{amount_of_shock_to_add_rounded} slow-release chlorine tab(s) in a chlorinator every week."
 
 
 
-# m = 5.0/10000.0
-# target_pH = 7.6
-# gallons_in_pool = 10000
-# current_pH = 7.0
 
 
-
-# volume = m*(target_pH-current_pH)*gallons_in_pool
-# puts "put #{volume} oz. of pH in your pool"
