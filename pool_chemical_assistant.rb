@@ -1,7 +1,7 @@
 #This assumes pool owner uses the following chemicals:
 #ph UP to increase the pH
 #pH DOWN to decrease the pH
-#GreenOut shock to shock the pool 
+#GreenOut shock to shock the pool (1 bag used per 10,000 gallons of pool water)
 
 
 #This determines the size of the pool based on the shape and dimensions
@@ -21,7 +21,6 @@ def how_many_gallons shape
 				if diameter > 0
 					volume_round = 1.0/4.0*@pi*(diameter**2.0)*@height_of_pool 
 					volume_in_gallons = volume_round*@constant_cubic_feet_to_gallons
-					puts volume_in_gallons
 					go_on_2 = false
 				end
 			end
@@ -70,11 +69,10 @@ def should_you_shock_the_pool shock
 			puts "Do not add any more pool shock at this time!"
 			go_on = false
 		elsif shock=="no"
-			puts @volume_in_gallons
 			amount_of_shock_to_add = @volume_in_gallons*(1.0/10000.0)
 			#the following code rounds the amount of shock to the nearest half-bag
 			amount_of_shock_to_add_rounded = ((amount_of_shock_to_add*2.0).round)/2.0
-			puts "Add #{amount_of_shock_to_add} bags of GreenOut to your pool"
+			puts "Add #{amount_of_shock_to_add_rounded} bags of GreenOut to your pool"
 			go_on = false
 		else 
 			puts "Please answer yes or no!"
@@ -93,16 +91,16 @@ def how_much_pH_chemical_should_be_added pH, volume_in_gallons
 	while(go_on)
 		if pH < @target_pH
 			amount_of_pH_to_add = volume_in_gallons*(2/(10000*0.1)*(@target_pH - pH))
-			amount_of_pH_to_add_rounded = (2*amount_of_shock_to_add).rounded/2
-			puts "Please add #{amount_of_pH_to_add_rounded} of pH UP to your pool"
+			amount_of_pH_to_add_rounded = ((2*amount_of_pH_to_add).round)/2
+			puts "Please add #{amount_of_pH_to_add_rounded} ounces of pH UP to your pool"
 			go_on = false
 		elsif pH==@target_pH
 			puts "pH is perfect! No need to adjust!"
 			go_on = false
 		else 
 			volume_in_gallons*(2/(10000*0.1)*(pH - @target_pH))
-			amount_of_pH_to_add_rounded = (2*amount_of_shock_to_add).rounded/2
-			puts "Please add #{amount_of_pH_to_add_rounded} of pH DOWN to your pool"
+			amount_of_pH_to_add_rounded = ((2*amount_of_shock_to_add).round)/2
+			puts "Please add #{amount_of_pH_to_add_rounded} ounces of pH DOWN to your pool"
 
 		end	
 		return amount_of_pH_to_add_rounded
