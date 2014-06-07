@@ -99,7 +99,7 @@ end
 def how_much_pH_chemical_should_be_added pH, volume_in_gallons
 	go_on = true
 	while(go_on)
-		if pH < @target_pH
+		if pH < @target_pH && pH >=0
 			amount_of_pH_to_add = volume_in_gallons*(2/(10000*0.1)*(@target_pH - pH))
 			amount_of_pH_to_add_rounded = ((2*amount_of_pH_to_add).round)/2
 			puts "Please add #{amount_of_pH_to_add_rounded} ounces of pH UP to your pool!"
@@ -107,14 +107,18 @@ def how_much_pH_chemical_should_be_added pH, volume_in_gallons
 		elsif pH==@target_pH
 			puts "pH is perfect! No need to adjust!"
 			go_on = false
-		else 
+		elsif  @target_pH < pH && pH <= 14  
 			amount_of_pH_to_add = volume_in_gallons*(2/(10000*0.1)*(pH - @target_pH))
 			amount_of_pH_to_add_rounded = ((2*amount_of_pH_to_add).round)/2
 			puts "Please add #{amount_of_pH_to_add_rounded} ounces of pH DOWN to your pool"
+			go_on = false
+		else 
+			puts "Please add a pH value between 0-14"
+			pH = gets.chomp.to_f
 
 		end	
-		return amount_of_pH_to_add_rounded
 	end
+	return amount_of_pH_to_add_rounded
 
 end
 
